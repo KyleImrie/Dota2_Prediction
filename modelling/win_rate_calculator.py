@@ -6,8 +6,8 @@ HERO_WIN_RATE = {}
 
 
 def main():
-    players = pd.read_csv('Dota2_data/players.csv')
-    matches = pd.read_csv('Dota2_data/match.csv')
+    players = pd.read_csv('data/players.csv')
+    matches = pd.read_csv('data/match.csv')
 
     merged_player_records = pd.merge(left=players, right=matches, how='inner', on='match_id')[REQUIRED_RECORD_ROWS]
     merged_player_records.apply(add_data_to_winrate, axis=1)
@@ -17,7 +17,7 @@ def main():
         win_rate = float(values['num_wins']) / float(values['num_games'])
         hero_win_out[hero_id] = win_rate
 
-    with open('Dota2_data/hero_win_rate.json', 'w') as file:
+    with open('data/hero_win_rate.json', 'w') as file:
         json.dump(hero_win_out, file)
 
     print('Hero win rates dumped successfully!')

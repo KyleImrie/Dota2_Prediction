@@ -3,9 +3,9 @@ import numpy as np
 import urllib
 from bs4 import BeautifulSoup
 
-oldTable = pd.read_csv('Dota2_data/hero_names.csv')
+oldTable = pd.read_csv('data/hero_names.csv')
 oldTable = oldTable.sort_values('localized_name').reset_index()
-soup = BeautifulSoup(open('Dota2_data/dotateamhtml.txt'), 'html.parser')
+soup = BeautifulSoup(open('data/dotateamhtml.txt'), 'html.parser')
 heroes = soup.find_all('li')
 
 names = []
@@ -51,5 +51,4 @@ for char in range(len(charList)):
     newTable.at[98, charList[char]] = underlord[char]
     newTable[charList[char]] = newTable[charList[char]].apply(pd.to_numeric)
 
-newTable.to_csv('hero_chars.csv', index=False)
-    
+newTable.to_csv('data/hero_chars.csv', index=False)
