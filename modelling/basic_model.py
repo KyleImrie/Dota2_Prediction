@@ -1,5 +1,6 @@
 import json
 
+import numpy as np
 import pandas as pd
 from sklearn.externals import joblib
 from sklearn.linear_model import LogisticRegression
@@ -18,8 +19,8 @@ def main():
     features = merged_player_records.groupby('match_id').agg({'hero_id': lambda x: list(x), 'radiant_win': 'first'})
     features['ordered_wr'] = features['hero_id'].apply(prepare_win_rate_features)
 
-    x = features['ordered_wr'].values.tolist()
-    y = features['radiant_win'].values.astype('int').tolist()
+    x = np.array(features['ordered_wr'].values.tolist())
+    y = np.array(features['radiant_win'].values.astype('int').tolist())
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.20, random_state=0)
 
