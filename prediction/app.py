@@ -2,9 +2,7 @@ import numpy as np
 
 from flask import Flask, request, json
 import boto3
-import pickle
 from sklearn.externals import joblib
-from sklearn.linear_model import LogisticRegression
 
 BUCKET_NAME = 'ds-dota-bucket'
 MODEL_FILE_NAME = 'logistic_model.pkl'
@@ -34,7 +32,7 @@ def index():
 
 def load_model(key):
     with open('model.pkl', 'wb') as data:
-        s3_bucket.download_fileobj('logistic_model.pkl', data)
+        s3_bucket.download_fileobj(key, data)
 
     model = joblib.load('model.pkl')
 
