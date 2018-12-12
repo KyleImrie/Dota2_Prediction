@@ -1,20 +1,25 @@
+import numpy as np
+
 from flask import Flask, request, json
 import boto3
 import pickle
+from sklearn.externals import joblib
+from sklearn.linear_model import LogisticRegression
 
 BUCKET_NAME = 'ds-dota-bucket'
 MODEL_FILE_NAME = 'logistic_model.pkl'
 
 app = Flask(__name__)
 
-S3 = boto3.client('s3', region_name='us-east-2')
+dev = boto3.session.Session(profile_name='kyle')
+s3_bucket = dev.resource('s3').Bucket(BUCKET_NAME)
 
 
 @app.route('/', methods=['POST'])
 def index():
     # Parse request body for model input
     body_dict = request.get_json(silent=True)
-    data = body_dict['data']
+    data = np.array(body_dict['data']).reshape(1, -1)
 
     # Load model
     model = load_model(MODEL_FILE_NAME)
@@ -28,11 +33,10 @@ def index():
 
 
 def load_model(key):
-    # Load model from S3 bucket
-    response = S3.get_object(Bucket=BUCKET_NAME, Key=key)
-    # Load pickle model
-    model_str = response['Body'].read()
-    model = pickle.loads(model_str)
+    with open('model.pkl', 'wb') as data:
+        s3_bucket.download_fileobj('logistic_model.pkl', data)
+
+    model = joblib.load('model.pkl')
 
     return model
 
