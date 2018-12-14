@@ -1,11 +1,12 @@
+from io import BytesIO
+
 import numpy as np
 
 from flask import Flask, request, json
 import boto3
-from sklearn.externals import joblib
 
 BUCKET_NAME = 'ds-dota-bucket'
-MODEL_FILE_NAME = 'logistic_model.pkl'
+MODEL = 'test.model'
 
 app = Flask(__name__)
 
@@ -20,23 +21,28 @@ def index():
     data = np.array(body_dict['data']).reshape(1, -1)
 
     # Load model
-    model = load_model(MODEL_FILE_NAME)
+    model = _load_model(MODEL)
+
+    parameters = np.array(model['parameters'])
+    offset = np.array(model['offset'])
 
     # Make prediction
-    prediction = model.predict(data).tolist()
+    prediction = _sigmoid(np.dot(data, parameters) + offset)
     # Respond with prediction result
-    result = {'prediction': prediction}
+    result = {'prediction': prediction.tolist()}
 
     return json.dumps(result)
 
 
-def load_model(key):
-    with open('model.pkl', 'wb') as data:
-        s3_bucket.download_fileobj(key, data)
-
-    model = joblib.load('model.pkl')
-
+def _load_model(key):
+    buf = BytesIO()
+    s3_bucket.download_fileobj(Key=key, Fileobj=buf)
+    model = json.loads(buf.getvalue())
     return model
+
+
+def _sigmoid(z):
+    return 1/(1+np.exp(z))
 
 
 if __name__ == '__main__':
