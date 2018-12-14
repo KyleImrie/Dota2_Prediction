@@ -10,7 +10,7 @@ MODEL = 'test.model'
 
 app = Flask(__name__)
 
-dev = boto3.session.Session(profile_name='kyle')
+dev = boto3.session.Session()
 s3_bucket = dev.resource('s3').Bucket(BUCKET_NAME)
 
 
