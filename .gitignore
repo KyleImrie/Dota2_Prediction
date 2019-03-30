@@ -5,4 +5,4 @@ modelling/data/
 .idea/
 
 # Ignore venv
-venv/
+light_env/

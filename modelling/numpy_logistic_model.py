@@ -22,18 +22,6 @@ class LogisticRegression(object):
         parameters = np.zeros((x_train.shape[1], 1))
         offset = 0
 
-        # sizes = [10, 100, 1000, 10000, 50000]
-        # for size in sizes:
-        #     x_test = x_train[:size]
-        #     y_test = y_train[:size]
-        #     parameters = np.zeros((x_test.shape[1], 1))
-        #
-        #     estimate = cls._sigmoid(np.dot(x_test, parameters) + offset)
-        #     tic = time.time()
-        #     cost = -np.sum(y_test*np.log(estimate)+(1-y_test)*np.log(1-estimate))/size
-        #     toc = time.time()
-        #     print("Time to run was %0.3f" % (toc-tic))
-
         for iteration in range(cls.number_of_iterations):
             estimate = cls._sigmoid(np.dot(x_train, parameters) + offset)
             cost = -np.sum(y_train*np.log(estimate)+(1-y_train)*np.log(1-estimate))/number_of_samples
