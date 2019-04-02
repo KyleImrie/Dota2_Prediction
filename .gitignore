@@ -3,3 +3,6 @@ modelling/data/
 
 # Ignore PyCharm files
 .idea/
+
+# Ignore venv
+light_env/
