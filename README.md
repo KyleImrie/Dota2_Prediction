@@ -1,8 +1,34 @@
-# Programming for Big Data I Final Project: Dota2 Prediction
+# DotA 2 Prediction Platform
+The objective of this project is to develop a Machine Learning model that can be served reliably and scalably on Amazon Web Services. In working on this project, I hope to develop my skills in building Serverless Services and developing a model which is constantly improving.
+
+This project is a work-in-progress. Below, I have described my project as I see it developing over the coming weeks.
+
+## Introduction
+This project started as a group project for my Big Data Programming class during my Masters'. The dataset used to initially train the Spark model can be found below. For that project, we only developed the model to run locally for predictions. I wanted to take a similar model and make it available for others to use by hosting it on the cloud.
 
 Data Source: https://www.kaggle.com/devinanzelmo/dota-2-matches/data
 
-## CSV Descriptions   
+DotA 2 is a massively popular online game enjoyed by millions around the world. The basics of the game are as follows: 2 teams of 5 "heroes" face off in a battle to destroy the opposing team's base. Each of these heroes have unique spells and abilities that help them defeat enemies. Each hero has their own strengths, weaknesses, and synergies with other heroes.
+
+By using the heroes chosen at the beginning of any match, we developed a model that could predict who would win that match.
+
+## Backend
+As of now, the predictions are made available to the world as a Flask application hosted by an Amazon Lambda function. By sending a GET request to API Gateway, the Lambda function will trigger, run the model on the request, and send a response containing the win prediction.
+
+The model itself is hosted on an Amazon S3 bucket as a JSON file, containing the parameters for the model to run.
+
+Eventually, I will write a service that will query the official DotA 2 API for fresh, new games to include in the training data. All the historical games and these new games will be stored in a DynamoDB table.
+
+A Scala script will trigger once a week to rebuild the Spark model with the data from the database.
+
+## Frontend
+The frontend is a work-in-progress.
+
+The frontend is being built with the React web framework. The goal is to have a list of all the heroes available to choose in DotA 2 as buttons, which the user can click to form the two opposing teams for the match.
+
+Once the two teams are validated (cannot have duplicate heroes in a match), the frontend sends a GET request to the Lambda function through API Gateway. The response contains the win prediction.
+
+## The training data
 (based off of the csv metadata from the data source)  
 
 ### Data from Kaggle
